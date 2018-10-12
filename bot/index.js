@@ -10,12 +10,12 @@ var https= require('https');
 
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
-const BUCKET_NAME = process.env.BUCKETNAME; //'senseipacket';
+const BUCKET_NAME = process.env.BUCKETNAME;
 const fs = require('fs');
 
 var dynamodb       = new AWS.DynamoDB({region: 'us-east-1'});
 var dynamoDocClient= new AWS.DynamoDB.DocumentClient();
-const TableName    = process.env.TABLENAME; //"ReadData";
+const TableName    = process.env.TABLENAME;
 var dataTypeWords  = "答え、問題、その他";
 var dataCategoryWords = "漢字、英語、質問";
 
@@ -52,6 +52,7 @@ var day  = ("0"+date.getDate()).slice(-2);
 var hour = ("0"+date.getHours()).slice(-2);
 var minute=("0"+date.getMinutes()).slice(-2);
 var second=("0"+date.getSeconds()).slice(-2);
+var today = year + month + day;
 var timetext= year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
 
 exports.handler = function(event, context) {
@@ -148,6 +149,7 @@ exports.handler = function(event, context) {
             callback2(null, displayName);
             console.log(msgId+"-"+msgType+"-"+msgReply+"-"+userType+userId+"-"+msgTime+msgImage+displayName);
           },
+		 
           function run(displayName, callback) {
             console.log('run data:'+data, displayName);
             const client = new line.Client({
@@ -193,6 +195,10 @@ exports.handler = function(event, context) {
 
               } else if (data === 'setup-morning') {
                 label = "「設定 おはよう」で登録して下さい。";
+		var place = "世田谷";
+		var today_forcast= get_forcast(place);
+		var today_room   = get_room();
+		var today_news   = get_news(today);
                 //carousel
                 var message_text = {"type": "template",
                     "altText": label,
@@ -201,21 +207,21 @@ exports.handler = function(event, context) {
                       "columns": [
                         {"thumbnailImageUrl": "https://s3.amazonaws.com/uchipacket/weather_cloud.png",
                           "title": "天気",
-                          "text": "今日の天気は曇り時々雨\n傘が必要です！",
+                          "text": today_forcast, //"今日の天気は曇り時々雨\n傘が必要です！",
                           "actions": [
                             {"type":"message", "label":"場所の変更","text":"設定 場所"}
                           ]
                         },
                         {"thumbnailImageUrl": "https://s3.amazonaws.com/uchipacket/room_living.png",
                           "title": "お部屋",
-                          "text": "室温: 29度\n湿度: 50％\nエアコン付けましょうか！",
+                          "text": today_room, //"室温: 29度\n湿度: 50％\nエアコン付けましょうか！",
                           "actions": [
                             {"type":"message", "label":"部屋の設定", "text":"設定 部屋"}
                           ]
                         },
                         {"thumbnailImageUrl": "https://s3.amazonaws.com/uchipacket/news_caster.png",
                           "title": "ニュース",
-                          "text": "LINE News\n",
+                          "text": today_news, //"LINE News\n",
                           "actions": [
                             {"type":"message", "label":"ニュースの変更", "text":"設定 ニュース"}
                           ]
