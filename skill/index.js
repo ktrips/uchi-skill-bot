@@ -21,7 +21,7 @@ const speaker = "クローバ";
 const skill_name = "おうち";
 const line_bot_url = "https://api.line.me/v2/bot";
 
-const monrning_greet = ["おはよう","お早う"]
+const morning_greet = ["おはよう","お早う"]
 const go_greet = ["行ってきます","行って来ます"]
 const home_greet = ["ただいま","只今"]
 const night_greet = ["おやすみ","お休み"]                 
@@ -136,7 +136,7 @@ function get_room(data="", callback) {
 
 function get_forcast(place, callback) {
   var focast_result = ["晴れ", 20, 25];
-  var result = "今日の天気は、" + focast_result + "、最低気温" + focast_result[1] + "度、最高は" + focast_result[2] + "度です！";  
+  var result = "今日の天気は、" + focast_result[0] + "、最低気温" + focast_result[1] + "度、最高は" + focast_result[2] + "度です！";  
   return result;
 }
 
@@ -149,30 +149,40 @@ function get_transit(from, to, callback) {
 function get_read_text(GreetSlot, callback) {
     
   console.log(GreetSlot);
+  var place = "世田谷";
   var today_forcast= get_forcast("place");
   var today_room   = get_room();
   var image_result = get_image();
+  var keyGreet     = "";
+  var keyGreetW    = "";
+  var greetText    = "";
 
-  if (GreetSlot.match(/^おはよう/) || GreetSlot.match(/^お早う/)) {
-    keyGreet = "morning";
-    keyGreetW= "おはようございます！";
-    var today_word   = get_random("foods");
+  if (GreetSlot.match(/^greetConv["morning"]["greetSlot"]/)) {
+    keyGreet  = "morning";
+    keyGreetW = "おはようございます！";
+    greetText+= today_forcast;
+    greetText+= today_room;
+    greetText+= get_random("foods") + "は、いかかでしょうか？";
 
-  } else if (GreetSlot.match(/^行ってきます/) || GreetSlot.match(/^行って来ます/)) {
-    keyGreet = "go";
-    keyGreetW= "いってらっしゃい！";
-    var today_fashion= get_random("fashion")
-    greetText= "今日にピッタリなのは、" + today_fashion + " です！";
-    var today_word  = get_random("words");
+  } else if (GreetSlot.match(/^greetConv["go"]["greetSlot"]/)) {
+    keyGreet  = "go";
+    keyGreetW = "いってらっしゃい！";
+    greetText+= today_forcast;
+    greetText+= "今日にピッタリなのは、" + get_fashion() + "です！";
+    greetText+= "今日の名言は、" + get_random("words") + "です！";
+    greetText+= keyGreetW;
 
-  } else if (GreetSlot.match(/^ただいま/) || GreetSlot.match(/^只今/)) {
+  } else if (GreetSlot.match(/^greetConv["home"]["greetSlot"]/)) {
     keyGreet = "home";
     keyGreetW= "おかえりなさい！";
+    greetText+= today_room;
 
-
-  } else if (GreetSlot.match(/^おやすみ/) || GreetSlot.match(/^お休み/)) {
+  } else if (GreetSlot.match(/^greetConv["night"]["greetSlot"]/)) {
     keyGreet = "night";
     keyGreetW= "おやすみなさい";
+    greetText+= today_room;
+    greetText+= "タイマーをセットしますか？";
+    greetText+= keyGreetW;
 
   } else {
     keyGreet = "hello";
@@ -181,11 +191,11 @@ function get_read_text(GreetSlot, callback) {
   }
 
   var text= keyGreetW+ "時刻は"+timetext+"！";
-  text   += today_word;
+  text   += greetText;
     
   var text_line= keyGreet + timetext+" LINE\n";  
   text_line   += today_room+ today_forcast+"\n";
-  text_line   += today_word+"\n";
+  text_line   += greetText+"\n";
 
   var all_text = text + "|" + text_line;
   return all_text;
