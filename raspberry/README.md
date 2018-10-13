@@ -15,6 +15,10 @@
 sudo apt-get install python3-requests python3-dateutil
 pip3 install rpi.gpio
 
+Tensorflow
+
+Download an appropriate file from ttps://github.com/lhelontra/tensorflow-on-arm/releases
+sudo pip3 install tensorflow-1.4.1-cp35-none-linux_armv7l.whl
 
 ## Python scripts
 
