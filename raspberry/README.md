@@ -10,6 +10,12 @@
 2. Set all of them to the case.
 3. Additional Grove connecter can be exposed to the outside.
 
+### Prerequisite software
+
+sudo apt-get install python3-requests python3-dateutil
+pip3 install rpi.gpio
+
+
 ## Python scripts
 
 - bme280.py: Check the room tempelature, humidity, and pressure.
