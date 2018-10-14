@@ -56,7 +56,7 @@ res_fashions= {"business-black": "ブラックレザーバンドと黒ぶちメ�
               "sports-yellow": "スポーツオレンジストラップとイエローメガネ",
               "casual-blue": "マリンブルーバンドと青いメガネ"}
 
-docomo_key = "307745313362694e4e6f41786a766668674a45536461713445566b4e6e2e4769367959723846394f395143"
+docomo_key = "xxx"
 URL_CAT = "https://api.apigw.smt.docomo.ne.jp/imageRecognition/v1/concept/classify/?APIKEY="
 URL_SPEECH= 'https://api.apigw.smt.docomo.ne.jp/voiceText/v1/textToSpeech?APIKEY='
 
