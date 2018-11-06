@@ -72,6 +72,9 @@ def camera():
         print 'Date dir already exists'
     os.system('sudo raspistill -o ' + fname)
     return fname
+  
+def getImage(fname, modelName):
+  register_openers()
   f = open(fname, 'r')
   url = URL_CAT
   datagen, headers = multipart_encode({'image': f, 'modelName': modelName})
